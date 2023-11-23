@@ -81,11 +81,15 @@ function App() {
   async function handleMint() {
     console.log(isNumber(amountValue));
     if (isNumber(amountValue)) {
-      const mint = await contract.mint(
-        userAddress,
-        ethers.utils.parseEther(amountValue)
-      );
-      await mint.wait();
+      try {
+        const mint = await contract.mint(
+          userAddress,
+          ethers.utils.parseEther(amountValue)
+        );
+        await mint.wait();
+      } catch (e) {
+        console.log('User declined');
+      }
       setAmountValue('');
       const balance = await contract.balanceOf(userAddress);
       setBalance(ethers.utils.formatEther(balance));
