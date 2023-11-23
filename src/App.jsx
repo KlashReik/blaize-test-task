@@ -79,7 +79,6 @@ function App() {
   }
 
   async function handleMint() {
-    console.log(isNumber(amountValue));
     if (isNumber(amountValue)) {
       try {
         const mint = await contract.mint(
@@ -88,7 +87,7 @@ function App() {
         );
         await mint.wait();
       } catch (e) {
-        console.log('User declined');
+        console.log('User declined', e);
       }
       setAmountValue('');
       const balance = await contract.balanceOf(userAddress);
