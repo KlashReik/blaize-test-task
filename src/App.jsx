@@ -13,7 +13,7 @@ import { Accordion, MintForm } from './components';
 
 function App() {
   const [userAddress, setUserAddress] = useState('');
-  const [amountValue, setAmountValue] = useState(0);
+  const [amountValue, setAmountValue] = useState('');
   const [balance, setBalance] = useState(0);
   const [balanceSymbol, setBalanceSymbol] = useState('');
 
@@ -83,6 +83,7 @@ function App() {
       ethers.utils.parseEther(amountValue)
     );
     await mint.wait();
+    setAmountValue('');
     const balance = await contract.balanceOf(userAddress);
     setBalance(ethers.utils.formatEther(balance));
   }
