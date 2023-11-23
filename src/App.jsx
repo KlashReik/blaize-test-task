@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
 import {
-  ChakraProvider,
   Box,
   Button,
-  theme,
-  Text,
+  ChakraProvider,
   Flex,
+  Text,
+  theme,
 } from '@chakra-ui/react';
 import { ethers } from 'ethers';
-import { CONTRACT_ABI, CONTRACT_ADDRESS } from './constants';
+import React, { useEffect, useState } from 'react';
 import { Accordion, MintForm } from './components';
+import { CONTRACT_ABI, CONTRACT_ADDRESS } from './constants';
+import { isNumber } from './helpers';
 
 function App() {
   const [userAddress, setUserAddress] = useState('');
@@ -78,14 +79,18 @@ function App() {
   }
 
   async function handleMint() {
-    const mint = await contract.mint(
-      userAddress,
-      ethers.utils.parseEther(amountValue)
-    );
-    await mint.wait();
-    setAmountValue('');
-    const balance = await contract.balanceOf(userAddress);
-    setBalance(ethers.utils.formatEther(balance));
+    console.log(isNumber(amountValue));
+    if (isNumber(amountValue)) {
+      const mint = await contract.mint(
+        userAddress,
+        ethers.utils.parseEther(amountValue)
+      );
+      await mint.wait();
+      setAmountValue('');
+      const balance = await contract.balanceOf(userAddress);
+      setBalance(ethers.utils.formatEther(balance));
+    } else {
+    }
   }
 
   return (
@@ -126,6 +131,9 @@ function App() {
                 onChange={handleInputChange}
                 inputValue={amountValue}
               />
+              <Text color="red" mb={8}>
+                Input value should be a number more than 0
+              </Text>
             </Box>
           ) : (
             <>
